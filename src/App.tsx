@@ -10,9 +10,10 @@ function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
   useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
+    const sub = client.models.Todo.observeQuery().subscribe({
+        next: (data) => setTodos([...data.items]),
     });
+    return () => sub.unsubscribe();
   }, []);
 
   function createTodo() {
